@@ -11,25 +11,56 @@ class StudentHiveModel extends Equatable {
   @HiveField(0)
   final String? studentId;
   @HiveField(1)
-  final String studentName;
+  final String firstName;
+  @HiveField(2)
+  final String lastName;
+  @HiveField(3)
+  final String phoneNumber;
+  @HiveField(4)
+  final String username;
+  @HiveField(5)
+  final String password;
 
-  StudentHiveModel({String? studentId, required this.studentName})
-    : studentId = studentId ?? const Uuid().v4();
+  StudentHiveModel({
+    String? studentId,
+    required this.firstName,
+    required this.lastName,
+    required this.phoneNumber,
+    required this.username,
+    required this.password,
+  }) : studentId = studentId ?? const Uuid().v4();
 
   // Initial Constructor
-  const StudentHiveModel.initial() : studentId = "", studentName = "";
+  const StudentHiveModel.initial()
+    : studentId = "",
+      firstName = "",
+      lastName = "",
+      phoneNumber = "",
+      username = "",
+      password = "";
 
   // From Entity
   factory StudentHiveModel.fromEntity(StudentEntity entity) {
     return StudentHiveModel(
       studentId: entity.studentId,
-      studentName: entity.studentName,
+      firstName: entity.firstName,
+      lastName: entity.lastName,
+      phoneNumber: entity.phoneNumber,
+      username: entity.username,
+      password: entity.password,
     );
   }
 
   // To Entity
   StudentEntity toEntity() {
-    return StudentEntity(studentId: studentId, studentName: studentName);
+    return StudentEntity(
+      studentId: studentId,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      username: username,
+      password: password,
+    );
   }
 
   // To Entity List
@@ -40,5 +71,12 @@ class StudentHiveModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [studentId, studentName];
+  List<Object?> get props => [
+    studentId,
+    firstName,
+    lastName,
+    phoneNumber,
+    username,
+    password,
+  ];
 }

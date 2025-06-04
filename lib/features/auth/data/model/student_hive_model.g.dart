@@ -18,18 +18,30 @@ class StudentHiveModelAdapter extends TypeAdapter<StudentHiveModel> {
     };
     return StudentHiveModel(
       studentId: fields[0] as String?,
-      studentName: fields[1] as String,
+      firstName: fields[1] as String,
+      lastName: fields[2] as String,
+      phoneNumber: fields[3] as String,
+      username: fields[4] as String,
+      password: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, StudentHiveModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.studentId)
       ..writeByte(1)
-      ..write(obj.studentName);
+      ..write(obj.firstName)
+      ..writeByte(2)
+      ..write(obj.lastName)
+      ..writeByte(3)
+      ..write(obj.phoneNumber)
+      ..writeByte(4)
+      ..write(obj.username)
+      ..writeByte(5)
+      ..write(obj.password);
   }
 
   @override

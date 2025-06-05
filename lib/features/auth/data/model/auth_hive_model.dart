@@ -59,7 +59,7 @@ class AuthHiveModel extends Equatable {
   }
 
   // To Entity
-  AuthEntity toEntity() {
+  AuthEntity toEntity(List<AuthHiveModel> students) {
     return AuthEntity(
       studentId: studentId,
       firstName: firstName,
@@ -81,4 +81,6 @@ class AuthHiveModel extends Equatable {
     username,
     password,
   ];
+
+  static Future<List<AuthEntity>> toEntityList(List<AuthHiveModel> students) async {}
 }

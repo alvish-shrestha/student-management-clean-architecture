@@ -30,6 +30,11 @@ class BatchHiveModel extends Equatable {
   }
 
   // To Entity List
+  static List<BatchEntity> toEntityList(List<BatchHiveModel> entityList) {
+    return entityList.map((data) => data.toEntity()).toList();
+  }
+
+  // From Entity List
   static List<BatchHiveModel> fromEntityList(List<BatchEntity> entityList) {
     return entityList
         .map((entity) => BatchHiveModel.fromEntity(entity))

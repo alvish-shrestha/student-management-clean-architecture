@@ -64,6 +64,11 @@ class StudentHiveModel extends Equatable {
   }
 
   // To Entity List
+  static List<StudentEntity> toEntityList(List<StudentHiveModel> entityList) {
+    return entityList.map((data) => data.toEntity()).toList();
+  }
+
+  // From Entity List
   static List<StudentHiveModel> fromEntityList(List<StudentEntity> entityList) {
     return entityList
         .map((entity) => StudentHiveModel.fromEntity(entity))

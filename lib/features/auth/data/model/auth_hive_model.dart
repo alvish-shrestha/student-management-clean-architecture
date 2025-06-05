@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:student_management/app/constant/hive/hive_table_constant.dart';
-import 'package:student_management/features/auth/domain/entity/student_entity.dart';
+import 'package:student_management/features/auth/domain/entity/auth_entity.dart';
 import 'package:student_management/features/batch/data/model/batch_hive_model.dart';
 import 'package:student_management/features/course/data/model/course_hive_model.dart';
 import 'package:uuid/uuid.dart';
 
-part "student_hive_model.g.dart";
+part "auth_hive_model.g.dart";
 
 @HiveType(typeId: HiveTableConstant.studentTableId)
-class StudentHiveModel extends Equatable {
+class AuthHiveModel extends Equatable {
   @HiveField(0)
   final String? studentId;
   @HiveField(1)
@@ -25,7 +25,7 @@ class StudentHiveModel extends Equatable {
   @HiveField(6)
   final String password;
 
-  StudentHiveModel({
+  AuthHiveModel({
     String? studentId,
     required this.firstName,
     required this.lastName,
@@ -36,7 +36,7 @@ class StudentHiveModel extends Equatable {
   }) : studentId = studentId ?? const Uuid().v4();
 
   // Initial Constructor
-  const StudentHiveModel.initial()
+  const AuthHiveModel.initial()
     : studentId = "",
       firstName = "",
       lastName = "",
@@ -46,8 +46,8 @@ class StudentHiveModel extends Equatable {
       password = "";
 
   // From Entity
-  factory StudentHiveModel.fromEntity(StudentEntity entity) {
-    return StudentHiveModel(
+  factory AuthHiveModel.fromEntity(AuthEntity entity) {
+    return AuthHiveModel(
       studentId: entity.studentId,
       firstName: entity.firstName,
       lastName: entity.lastName,
@@ -59,8 +59,8 @@ class StudentHiveModel extends Equatable {
   }
 
   // To Entity
-  StudentEntity toEntity() {
-    return StudentEntity(
+  AuthEntity toEntity() {
+    return AuthEntity(
       studentId: studentId,
       firstName: firstName,
       lastName: lastName,

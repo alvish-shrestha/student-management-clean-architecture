@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:student_management/app/constant/hive/hive_table_constant.dart';
 import 'package:student_management/features/auth/domain/entity/student_entity.dart';
+import 'package:student_management/features/batch/data/model/batch_hive_model.dart';
+import 'package:student_management/features/course/data/model/course_hive_model.dart';
 import 'package:uuid/uuid.dart';
 
 part "student_hive_model.g.dart";
@@ -15,17 +17,20 @@ class StudentHiveModel extends Equatable {
   @HiveField(2)
   final String lastName;
   @HiveField(3)
-  final String phoneNumber;
+  final BatchHiveModel batch;
   @HiveField(4)
-  final String username;
+  final List<CourseHiveModel> courses;
   @HiveField(5)
+  final String username;
+  @HiveField(6)
   final String password;
 
   StudentHiveModel({
     String? studentId,
     required this.firstName,
     required this.lastName,
-    required this.phoneNumber,
+    required this.batch,
+    required this.courses,
     required this.username,
     required this.password,
   }) : studentId = studentId ?? const Uuid().v4();
@@ -35,7 +40,8 @@ class StudentHiveModel extends Equatable {
     : studentId = "",
       firstName = "",
       lastName = "",
-      phoneNumber = "",
+      batch = const BatchHiveModel.initial(),
+      courses = const [],
       username = "",
       password = "";
 
@@ -45,7 +51,8 @@ class StudentHiveModel extends Equatable {
       studentId: entity.studentId,
       firstName: entity.firstName,
       lastName: entity.lastName,
-      phoneNumber: entity.phoneNumber,
+      batch: BatchHiveModel.fromEntity(entity.batch),
+      courses: CourseHiveModel.fromEntityList(entity.courses),
       username: entity.username,
       password: entity.password,
     );
@@ -57,22 +64,11 @@ class StudentHiveModel extends Equatable {
       studentId: studentId,
       firstName: firstName,
       lastName: lastName,
-      phoneNumber: phoneNumber,
+      batch: batch.toEntity(),
+      courses: CourseHiveModel.toEntityList(courses),
       username: username,
       password: password,
     );
-  }
-
-  // To Entity List
-  static List<StudentEntity> toEntityList(List<StudentHiveModel> entityList) {
-    return entityList.map((data) => data.toEntity()).toList();
-  }
-
-  // From Entity List
-  static List<StudentHiveModel> fromEntityList(List<StudentEntity> entityList) {
-    return entityList
-        .map((entity) => StudentHiveModel.fromEntity(entity))
-        .toList();
   }
 
   @override
@@ -80,7 +76,8 @@ class StudentHiveModel extends Equatable {
     studentId,
     firstName,
     lastName,
-    phoneNumber,
+    batch,
+    courses,
     username,
     password,
   ];

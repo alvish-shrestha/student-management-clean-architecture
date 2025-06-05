@@ -20,16 +20,17 @@ class StudentHiveModelAdapter extends TypeAdapter<StudentHiveModel> {
       studentId: fields[0] as String?,
       firstName: fields[1] as String,
       lastName: fields[2] as String,
-      phoneNumber: fields[3] as String,
-      username: fields[4] as String,
-      password: fields[5] as String,
+      batch: fields[3] as BatchHiveModel,
+      courses: (fields[4] as List).cast<CourseHiveModel>(),
+      username: fields[5] as String,
+      password: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, StudentHiveModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.studentId)
       ..writeByte(1)
@@ -37,10 +38,12 @@ class StudentHiveModelAdapter extends TypeAdapter<StudentHiveModel> {
       ..writeByte(2)
       ..write(obj.lastName)
       ..writeByte(3)
-      ..write(obj.phoneNumber)
+      ..write(obj.batch)
       ..writeByte(4)
-      ..write(obj.username)
+      ..write(obj.courses)
       ..writeByte(5)
+      ..write(obj.username)
+      ..writeByte(6)
       ..write(obj.password);
   }
 

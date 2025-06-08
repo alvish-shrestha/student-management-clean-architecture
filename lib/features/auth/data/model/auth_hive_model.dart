@@ -82,5 +82,7 @@ class AuthHiveModel extends Equatable {
     password,
   ];
 
-  static Future<List<AuthEntity>> toEntityList(List<AuthHiveModel> students) async {}
+  static List<AuthEntity> toEntityList(List<AuthHiveModel> students) {
+    return students.map((student) => student.toEntity(students)).toList();
+  }
 }

@@ -7,11 +7,11 @@ import 'package:student_management/features/batch/domain/entity/batch_entity.dar
 class BatchLocalDataSource implements IBatchDataSource {
   // 2ta class mathi depend
   final HiveService hiveService;
-  final BatchHiveModel batchHiveModel;
+  // final BatchHiveModel batchHiveModel;
 
   BatchLocalDataSource({
     required this.hiveService,
-    required this.batchHiveModel,
+    // required this.batchHiveModel,
   });
 
   @override

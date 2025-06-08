@@ -7,11 +7,11 @@ import 'package:student_management/features/course/domain/entity/course_entity.d
 class CourseLocalDataSource implements ICourseDataSource {
   // 2ta class mathi depend
   final HiveService hiveService;
-  final CourseHiveModel courseHiveModel;
+  // final CourseHiveModel courseHiveModel;
 
   CourseLocalDataSource({
     required this.hiveService,
-    required this.courseHiveModel,
+    // required this.courseHiveModel,
   });
 
   @override

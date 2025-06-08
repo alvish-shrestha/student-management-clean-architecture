@@ -36,7 +36,6 @@ class CourseView extends StatelessWidget {
                   if (_courseViewFormKey.currentState!.validate()) {
                     final courseName = courseNameController.text.trim();
                     context.read<CourseViewBloc>().add(AddCourse(courseName));
-
                     // Optionally clear the input field
                     courseNameController.clear();
                   }

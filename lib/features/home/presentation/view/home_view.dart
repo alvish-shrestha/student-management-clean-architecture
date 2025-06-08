@@ -50,16 +50,10 @@ class HomeView extends StatelessWidget {
         builder: (context, state) {
           return BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard),
-                label: 'Dashboard',
-              ),
+              BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard',),
               BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Course'),
               BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Batch'),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle),
-                label: 'Account',
-              ),
+              BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
             ],
             currentIndex: state.selectedIndex,
             selectedItemColor: Colors.white,

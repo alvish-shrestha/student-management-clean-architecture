@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:student_management/core/common/snackbar/my_snackbar.dart';
+import 'package:student_management/features/batch/domain/entity/batch_entity.dart';
+import 'package:student_management/features/batch/presentation/view_model/batch_view_bloc.dart';
+import 'package:student_management/features/batch/presentation/view_model/batch_view_state.dart';
+import 'package:student_management/features/course/domain/entity/course_entity.dart';
+import 'package:student_management/features/course/presentation/view_model/course_view_bloc.dart';
+import 'package:student_management/features/course/presentation/view_model/course_view_state.dart';
 
 class RegisterView extends StatelessWidget {
   RegisterView({super.key});
@@ -11,6 +22,9 @@ class RegisterView extends StatelessWidget {
   final _usernameController = TextEditingController(text: 'kiran');
   final _passwordController = TextEditingController(text: 'kiran123');
 
+  final ValueNotifier<BatchEntity?> _selectedBatch = ValueNotifier(null);
+  final ValueNotifier<List<CourseEntity>> _selectedCourses = ValueNotifier([]);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +36,7 @@ class RegisterView extends StatelessWidget {
               key: _key,
               child: Column(
                 children: [
+                  // Profile Image Picker
                   InkWell(
                     onTap: () {
                       showModalBottomSheet(
@@ -57,144 +72,154 @@ class RegisterView extends StatelessWidget {
                       height: 200,
                       width: 200,
                       child: CircleAvatar(
-                        radius: 50,
-                        // backgroundImage: _img != null
-                        //     ? FileImage(_img!)
-                        //     : const AssetImage('assets/images/profile.png')
-                        //         as ImageProvider,
-                        backgroundImage:
-                            const AssetImage('assets/images/profile.png')
-                                as ImageProvider,
+                        backgroundImage: const AssetImage(
+                          'assets/images/profile.png',
+                        ),
                       ),
                     ),
                   ),
                   _gap,
+                  // First Name
                   TextFormField(
                     controller: _fnameController,
                     decoration: const InputDecoration(labelText: 'First Name'),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter first name';
-                      }
-                      return null;
-                    }),
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Please enter first name'
+                        : null,
                   ),
                   _gap,
+                  // Last Name
                   TextFormField(
                     controller: _lnameController,
                     decoration: const InputDecoration(labelText: 'Last Name'),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter last name';
-                      }
-                      return null;
-                    }),
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Please enter last name'
+                        : null,
                   ),
                   _gap,
+                  // Phone Number
                   TextFormField(
                     controller: _phoneController,
                     decoration: const InputDecoration(labelText: 'Phone No'),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter phoneNo';
-                      }
-                      return null;
-                    }),
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Please enter phoneNo'
+                        : null,
                   ),
-                  // _gap,
-                  // BlocBuilder<BatchBloc, BatchState>(builder: (context, state) {
-                  //   return DropdownButtonFormField<BatchEntity>(
-                  //     items: state.batches
-                  //         .map((e) => DropdownMenuItem<BatchEntity>(
-                  //               value: e,
-                  //               child: Text(e.batchName),
-                  //             ))
-                  //         .toList(),
-                  //     onChanged: (value) {
-                  //       _dropDownValue = value;
-                  //     },
-                  //     value: _dropDownValue,
-                  //     decoration: const InputDecoration(
-                  //       labelText: 'Select Batch',
-                  //     ),
-                  //     validator: ((value) {
-                  //       if (value == null) {
-                  //         return 'Please select batch';
-                  //       }
-                  //       return null;
-                  //     }),
-                  //   );
-                  // }),
                   _gap,
-                  // BlocBuilder<CourseBloc, CourseState>(
-                  //     builder: (context, courseState) {
-                  //   if (courseState.isLoading) {
-                  //     return const CircularProgressIndicator();
-                  //   } else {
-                  //     return MultiSelectDialogField(
-                  //       title: const Text('Select course'),
-                  //       items: courseState.courses
-                  //           .map(
-                  //             (course) => MultiSelectItem(
-                  //               course,
-                  //               course.courseName,
-                  //             ),
-                  //           )
-                  //           .toList(),
-                  //       listType: MultiSelectListType.CHIP,
-                  //       buttonText: const Text(
-                  //         'Select course',
-                  //         style: TextStyle(color: Colors.black),
-                  //       ),
-                  //       buttonIcon: const Icon(Icons.search),
-                  //       onConfirm: (values) {
-                  //         _lstCourseSelected.clear();
-                  //         _lstCourseSelected.addAll(values);
-                  //       },
-                  //       decoration: BoxDecoration(
-                  //         border: Border.all(
-                  //           color: Colors.black87,
-                  //         ),
-                  //         borderRadius: BorderRadius.circular(5),
-                  //       ),
-                  //       validator: ((value) {
-                  //         if (value == null || value.isEmpty) {
-                  //           return 'Please select courses';
-                  //         }
-                  //         return null;
-                  //       }),
-                  //     );
-                  //   }
-                  // }),
+                  // Batch Dropdown
+                  BlocBuilder<BatchViewBloc, BatchViewState>(
+                    builder: (context, state) {
+                      return ValueListenableBuilder<BatchEntity?>(
+                        valueListenable: _selectedBatch,
+                        builder: (context, selectedBatch, _) {
+                          return DropdownButtonFormField<BatchEntity>(
+                            value: selectedBatch,
+                            items: state.batches
+                                .map(
+                                  (batch) => DropdownMenuItem(
+                                    value: batch,
+                                    child: Text(batch.batchName),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) => _selectedBatch.value = value,
+                            decoration: const InputDecoration(
+                              labelText: 'Select Batch',
+                            ),
+                            validator: (value) =>
+                                (value == null) ? 'Please select batch' : null,
+                          );
+                        },
+                      );
+                    },
+                  ),
                   _gap,
+                  // Course MultiSelect
+                  BlocBuilder<CourseViewBloc, CourseViewState>(
+                    builder: (context, courseState) {
+                      if (courseState.isLoading) {
+                        return const CircularProgressIndicator();
+                      }
+
+                      return ValueListenableBuilder<List<CourseEntity>>(
+                        valueListenable: _selectedCourses,
+                        builder: (context, selectedCourses, _) {
+                          return MultiSelectDialogField<CourseEntity>(
+                            title: const Text('Select course'),
+                            items: courseState.courses
+                                .map(
+                                  (course) => MultiSelectItem(
+                                    course,
+                                    course.courseName,
+                                  ),
+                                )
+                                .toList(),
+                            initialValue: selectedCourses,
+                            listType: MultiSelectListType.CHIP,
+                            buttonText: const Text(
+                              'Select course',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            buttonIcon: const Icon(Icons.search),
+                            onConfirm: (values) => _selectedCourses.value =
+                                List<CourseEntity>.from(values),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black87),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            validator: (value) =>
+                                (value == null || value.isEmpty)
+                                ? 'Please select courses'
+                                : null,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  _gap,
+                  // Username
                   TextFormField(
                     controller: _usernameController,
                     decoration: const InputDecoration(labelText: 'Username'),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter username';
-                      }
-                      return null;
-                    }),
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Please enter username'
+                        : null,
                   ),
                   _gap,
+                  // Password
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: InputDecoration(labelText: 'Password'),
-                    validator: ((value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter password';
-                      }
-                      return null;
-                    }),
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Please enter password'
+                        : null,
                   ),
                   _gap,
+                  // Register Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_key.currentState!.validate()) {}
+                        if (_key.currentState!.validate()) {
+                          // Access form values
+                          final batch = _selectedBatch.value;
+                          final courses = _selectedCourses.value;
+                          final username = _usernameController.text;
+
+                          debugPrint("Batch: ${batch?.batchName}");
+                          debugPrint(
+                            "Courses: ${courses.map((e) => e.courseName).toList()}",
+                          );
+                          debugPrint("Username: $username");
+
+                          // Use your custom snackbar function
+                          showMySnackBar(
+                            context: context,
+                            message: 'User created',
+                            color: Colors.green, // optional
+                          );
+                        }
                       },
                       child: const Text('Register'),
                     ),
